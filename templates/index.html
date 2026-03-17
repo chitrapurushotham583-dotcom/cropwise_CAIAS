@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<title>CropWise - Sustainable Agriculture Advisor</title>
+
+<link rel="stylesheet" href="/static/style.css">
+
+</head>
+
+<body>
+
+<h1>🌾 CropWise</h1>
+<h3>Carbon & Water Optimizer for Sustainable Agriculture</h3>
+
+<div class="form-container">
+
+<label for="crop">Select Crop</label>
+<select id="crop">
+<option value="Rice">Rice</option>
+<option value="Wheat">Wheat</option>
+<option value="Maize">Maize</option>
+</select>
+
+<label for="soil">Select Soil Type</label>
+<select id="soil">
+<option value="Clay">Clay</option>
+<option value="Sandy">Sandy</option>
+<option value="Loamy">Loamy</option>
+</select>
+
+<label for="location">Enter Location</label>
+<input type="text" id="location" placeholder="Enter location">
+
+<button onclick="analyzeCrop()">Analyze</button>
+
+</div>
+
+<div id="result" class="result-box"></div>
+
+<script>
+
+function analyzeCrop(){
+
+let crop = document.getElementById("crop").value;
+let soil = document.getElementById("soil").value;
+let location = document.getElementById("location").value;
+
+fetch("/analyze",{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+crop:crop,
+soil:soil,
+location:location
+})
+})
+
+.then(response => response.json())
+
+.then(data => {
+
+document.getElementById("result").innerHTML = `
+
+<h2>🌱 Sustainability Report</h2>
+
+<p><strong>💧 Recommended Water Usage:</strong> ${data.water} liters</p>
+
+<p><strong>🌍 Estimated Carbon Emission:</strong> ${data.carbon} kg CO₂</p>
+
+<p><strong>⭐ Sustainability Score:</strong> ${data.score}/100</p>
+
+<p><strong>⚡ Recommendation:</strong> ${data.recommendation}</p>
+
+`;
+
+});
+
+}
+
+</script>
+
+</body>
+</html>
